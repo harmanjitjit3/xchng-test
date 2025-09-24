@@ -1,34 +1,61 @@
-import { Home, Search, ClipboardClock, User } from "lucide-react";
+import { Home, Search, UserCog, User } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function NavBar() {
+  const userRole = useSelector((state) => state.auth.userProfile.role);
   return (
-    <nav className="hidden sm:flex items-center gap-6">
-      <Link
+    <nav className="hidden sm:flex items-center gap-4">
+      <NavLink
         to="/app/home"
-        className="flex items-center gap-1 text-white hover:text-gray-200 transition"
+        className={({ isActive }) =>
+          `flex items-center gap-1 hover:text-gray-200 transition p-2 rounded-lg  ${
+            isActive ? "text-white font-bold bg-[#333333c6]" : "text-gray-400"
+          }`
+        }
       >
         <Home className="w-5 h-5" />
         <span className="text-sm font-medium">Home</span>
-      </Link>
+      </NavLink>
 
-      <Link
+      <NavLink
         to="/app/search"
-        className="flex items-center gap-1 text-white hover:text-gray-200 transition"
+        className={({ isActive }) =>
+          `flex items-center gap-1 hover:text-gray-200 transition p-2 rounded-lg  ${
+            isActive ? "text-white font-bold bg-[#333333c6]" : "text-gray-400"
+          }`
+        }
       >
         <Search className="w-5 h-5" />
         <span className="text-sm font-medium">Search</span>
-      </Link>
+      </NavLink>
 
-      <Link
+      <NavLink
         to="/app/profile"
-        className="flex items-center gap-1 text-white hover:text-gray-200 transition"
+        className={({ isActive }) =>
+          `flex items-center gap-1 hover:text-gray-200 transition p-2 rounded-lg ${
+            isActive ? "text-white font-bold bg-[#333333c6]" : "text-gray-400"
+          }`
+        }
       >
         <User className="w-5 h-5" />
         <span className="text-sm font-medium">Profile</span>
-      </Link>
+      </NavLink>
+
+      {userRole === "admin" && (
+        <NavLink
+          to="/admin"
+          className={({ isActive }) =>
+            `flex items-center gap-1 hover:text-gray-200 transition p-2 rounded-lg ${
+              isActive ? "text-white font-bold bg-[#333333c6]" : "text-gray-400"
+            }`
+          }
+        >
+          <UserCog className="w-5 h-5" />
+          <span className="text-sm font-medium">Admin</span>
+        </NavLink>
+      )}
     </nav>
   );
 }

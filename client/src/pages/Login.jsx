@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUserThunk, logoutUserThunk } from "@/store/thunks/user.thunk.js";
@@ -113,7 +114,7 @@ export default function Login() {
             disabled={state.buttonLoading}
             className="text-lg w-full py-6 rounded-lg font-semibold transition-transform shadow-lg cursor-pointer text-white"
           >
-            {state.buttonLoading ? "Logging in..." : "Login"}
+            {state.buttonLoading ?  <Loader2 className="animate-spin" /> : "Login"}
           </Button>
         </form>
 

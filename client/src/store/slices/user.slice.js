@@ -8,9 +8,9 @@ import {
 
 const initialState = {
   userProfile: null,
-  buttonLoading: false, // for form buttons (login/signup/logout)
+  buttonLoading: false, 
   isAuthorized: false,
-  loading: true, // only for session restore on app init
+  loading: true,
 };
 
 const userSlice = createSlice({
@@ -32,10 +32,10 @@ const userSlice = createSlice({
       state.loading = false;
     },
     setLoading: (state, action) => {
-      state.loading = !!action.payload; // global app loading
+      state.loading = !!action.payload;
     },
     setButtonLoading: (state, action) => {
-      state.buttonLoading = !!action.payload; // only for button
+      state.buttonLoading = !!action.payload;
     },
   },
 

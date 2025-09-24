@@ -24,6 +24,8 @@ import ProtectedRoute from "@/context/ProtectedRoute.jsx";
 import PublicRoute from "@/context/PublicRoute.jsx";
 import AdminRoutes from "@/context/AdminRoutes.jsx";
 import AuthRoute from "./context/AuthRoutes";
+import RequestsList from "./pages/admin/RequestsList";
+import AdminPanel from "./pages/admin/AdminPanel";
 
 const router = createBrowserRouter([
   {
@@ -63,19 +65,21 @@ const router = createBrowserRouter([
 
       {
         path: "/admin",
+        element: <AdminRoutes />,
         children: [
           {
             element: <Layout />,
             children: [
-              { index: true, element: <Navigate to="/app/home" replace /> },
+              { index: true, element: <AdminPanel /> },
+              { path: "requests", element: <RequestsList /> },
             ],
           },
         ],
       },
 
       { path: "*", element: <NotFound /> },
-    ],
-  },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

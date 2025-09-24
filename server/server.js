@@ -5,6 +5,8 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { connectToDB } from './db/connection1.db.js';
 import authRoute from './routes/auth.routes.js';
+import requestRoute from "./routes/request.routes.js";
+import notificationRoute from "./routes/notification.routes.js";
 
 const PORT = process.env.PORT;
 
@@ -25,6 +27,12 @@ app.use(cookieParser());
 
 // Auth Routes
 app.use("/api/v1/auth", authRoute);
+
+// Request Routes
+app.use("/api/v1/requests", requestRoute);
+
+// Notifications Routes
+app.use("/api/v1/notifications", notificationRoute);
 
 
 app.listen(PORT, () => {

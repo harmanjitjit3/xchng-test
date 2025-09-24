@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUserThunk } from "@/store/thunks/user.thunk";
@@ -71,7 +72,7 @@ export default function Register() {
     }
 
     const data = await dispatch(signupUserThunk(formData));
-    
+
     if (data?.payload?.success) {
       dispatch(setUser(data?.payload?.user));
       toast.success(
@@ -133,7 +134,9 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <Label className="text-sm text-gray-800 mb-1 px-2">Phone Number</Label>
+            <Label className="text-sm text-gray-800 mb-1 px-2">
+              Phone Number
+            </Label>
             <Input
               type="text"
               placeholder="Enter your phone number"
@@ -178,8 +181,13 @@ export default function Register() {
             type="submit"
             disabled={state.buttonLoading}
             className="text-lg w-full py-6 rounded-lg font-semibold transition-transform shadow-lg cursor-pointer text-white"
+            // className="w-full rounded-xl py-3 text-lg font-semibold text-white shadow-md bg-primary hover:opacity-90 disabled:opacity-70"
           >
-            {state.buttonLoading ? "Signing Up..." : "Sign Up"}
+            {state.buttonLoading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
 

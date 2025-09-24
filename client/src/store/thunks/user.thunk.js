@@ -19,10 +19,6 @@ export const signupUserThunk = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      // console.error("❌ Signup Error:", error);
-      // toast.error(
-      //   error.response?.data?.message || error.message || "Something went wrong!"
-      // );
       return rejectWithValue({
         message: error.message,
         code: error.code,
@@ -43,10 +39,6 @@ export const loginUserThunk = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
-      // console.error("❌ Login Error:", error);
-      // toast.error(
-      //   error.response?.data?.message || error.message || "Something went wrong!"
-      // );
       return rejectWithValue({
         message: error.message,
         code: error.code,
@@ -64,10 +56,6 @@ export const logoutUserThunk = createAsyncThunk(
       const res = await API.post("/auth/logout");
       return res.data;
     } catch (error) {
-      // console.error("❌ Logout Error:", error);
-      // toast.error(
-      //   error.response?.data?.message || error.message || "Something went wrong!"
-      // );
       return rejectWithValue({
         message: error.message,
         code: error.code,

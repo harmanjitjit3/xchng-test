@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchNotificationsThunk } from "@/store/thunks/notification.thunk";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -17,9 +18,13 @@ export default function Notifications() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { notifications, loading } = useSelector(
+    (state) => state.notifications
+  );
 
+  useEffect(() => {
+    dispatch(fetchNotificationsThunk());
+  }, [dispatch]);
 
   const goBack = () => {
     if (window.history.state && window.history.state.idx > 0) {

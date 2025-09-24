@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import Request from "../models/request.model.js";
+import { createNotification } from "../utils/createNotification.js";
 
 export const signup = async (req, res) => {
   try {
@@ -66,6 +68,19 @@ export const signup = async (req, res) => {
       role: "user",
     });
 
+    const newRequest = await Request.create({
+      user: newUser._id,
+      type: "account",
+      status: "pending",
+    });
+
+    await createNotification({
+      user: newUser._id,
+      roleFor: "admin",
+      type: "account",
+      message: `${newUser.username} requested account approval`,
+      request: newRequest._id,
+    });
 
     const token = generateToken(newUser._id);
 
