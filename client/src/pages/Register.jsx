@@ -5,6 +5,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { signupUserThunk } from "@/store/thunks/user.thunk";
+import { setUser } from "@/store/slices/user.slice";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -14,7 +16,11 @@ export default function Register() {
     locality: "",
     password: "",
   });
-   const navigate = useNavigate();
+
+  const state = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +70,23 @@ export default function Register() {
       return;
     }
 
-    navigate("/app/home");
+    const data = await dispatch(signupUserThunk(formData));
+    
+    if (data?.payload?.success) {
+      dispatch(setUser(data?.payload?.user));
+      toast.success(
+        data?.payload?.response?.message ||
+          data?.payload?.message ||
+          "Signup Success!"
+      );
+      navigate("/pending-approval");
+    } else {
+      toast.error(
+        data?.payload?.response?.message ||
+          data?.payload?.message ||
+          "Something went wrong!"
+      );
+    }
   };
 
   return (
@@ -154,10 +176,10 @@ export default function Register() {
 
           <Button
             type="submit"
+            disabled={state.buttonLoading}
             className="text-lg w-full py-6 rounded-lg font-semibold transition-transform shadow-lg cursor-pointer text-white"
-            // className="w-full rounded-xl py-3 text-lg font-semibold text-white shadow-md bg-primary hover:opacity-90 disabled:opacity-70"
           >
-            Sign Up
+            {state.buttonLoading ? "Signing Up..." : "Sign Up"}
           </Button>
         </form>
 

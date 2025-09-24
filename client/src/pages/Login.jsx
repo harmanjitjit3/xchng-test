@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { loginUserThunk, logoutUserThunk } from "@/store/thunks/user.thunk.js";
+import { setUser } from "@/store/slices/user.slice";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -12,8 +14,9 @@ export default function Login() {
     password: "",
   });
 
+  const state = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,8 +42,23 @@ export default function Login() {
       return;
     }
 
-    navigate("/app/home");
+    const data = await dispatch(loginUserThunk(formData));
 
+    if (data?.payload?.success) {
+      dispatch(setUser(data?.payload?.user));
+      toast.success(
+        data?.payload?.response?.message ||
+          data?.payload?.message ||
+          "Login Success!"
+      );
+      navigate("/app/home");
+    } else {
+      toast.error(
+        data?.payload?.response?.message ||
+          data?.payload?.message ||
+          "Something went wrong!"
+      );
+    }
   };
 
   return (
@@ -92,9 +110,10 @@ export default function Login() {
 
           <Button
             type="submit"
+            disabled={state.buttonLoading}
             className="text-lg w-full py-6 rounded-lg font-semibold transition-transform shadow-lg cursor-pointer text-white"
           >
-            Login
+            {state.buttonLoading ? "Logging in..." : "Login"}
           </Button>
         </form>
 
@@ -112,9 +131,3 @@ export default function Login() {
     </div>
   );
 }
-
-// button
-// className="w-full rounded-xl py-3 md:py-4 text-base md:text-lg font-semibold text-white shadow-md bg-primary hover:opacity-90 disabled:opacity-70"
-
-// input
-// className="w-full rounded-xl border border-gray-300 px-4 py-3 text-base md:text-lg text-gray-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/50"

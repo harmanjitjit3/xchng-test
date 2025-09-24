@@ -7,37 +7,80 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { Provider } from "react-redux";
-// import { store } from "@/store/store.js";
+import { store } from "@/store/store.js";
 import { Toaster } from "react-hot-toast";
 import Layout from "@/Layout.jsx";
+import RootLayout from "@/RootLayout.jsx";
 import Auth from "@/pages/Auth.jsx";
 import Login from "@/pages/Login.jsx";
 import Register from "@/pages/Register.jsx";
 import Home from "@/pages/Home.jsx";
 import SearchPage from "@/pages/Search.jsx";
 import Profile from "@/pages/Profile.jsx";
+import Notifications from "@/pages/NotificationsPage.jsx";
 import NotFound from "@/pages/NotFound.jsx";
+import PendingApproval from "@/pages/PendingApproval.jsx";
+import ProtectedRoute from "@/context/ProtectedRoute.jsx";
+import PublicRoute from "@/context/PublicRoute.jsx";
+import AdminRoutes from "@/context/AdminRoutes.jsx";
+import AuthRoute from "./context/AuthRoutes";
+
 const router = createBrowserRouter([
-  { path: "/", element: <Auth /> },
-  { path: "login", element: <Login /> },
-  { path: "register", element: <Register /> },
-
   {
-    path: "/app",
-    element: <Layout />,
+    element: <RootLayout />,
     children: [
-      { index: true, path: "home", element: <Home /> },
-      { path: "search", element: <SearchPage /> },
-      { path: "profile", element: <Profile /> },
-    ],
-  },
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: "/", element: <Auth /> },
+          { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
+        ],
+      },
 
-  { path: "*", element: <NotFound /> },
+      {
+        path: "/pending-approval",
+        element: <AuthRoute />,
+        children: [{ index: true, element: <PendingApproval /> }],
+      },
+
+      {
+        path: "/app",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            element: <Layout />,
+            children: [
+              { index: true, element: <Navigate to="home" replace /> },
+              { path: "home", element: <Home /> },
+              { path: "search", element: <SearchPage /> },
+              { path: "profile", element: <Profile /> },
+            ],
+          },
+          { path: "notifications", element: <Notifications /> },
+        ],
+      },
+
+      {
+        path: "/admin",
+        children: [
+          {
+            element: <Layout />,
+            children: [
+              { index: true, element: <Navigate to="/app/home" replace /> },
+            ],
+          },
+        ],
+      },
+
+      { path: "*", element: <NotFound /> },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <>
+  <Provider store={store}>
     <RouterProvider router={router} />
     <Toaster position="top-right" reverseOrder={false} />
-  </>
+  </Provider>
 );
