@@ -14,10 +14,26 @@ connectToDB();
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.CLIENT_URI,
+const allowedOrigins = process.env.CLIENT_URI;
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+  ],
   credentials: true,
-}));
+};
+
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,6 +49,9 @@ app.use("/api/v1/requests", requestRoute);
 // Notifications Routes
 app.use("/api/v1/notifications", notificationRoute);
 
+app.get("/", (req, res) => {
+  res.send("Backend is running....");
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening at port ${PORT}`);
