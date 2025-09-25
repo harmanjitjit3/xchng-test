@@ -15,8 +15,7 @@ connectToDB();
 const app = express();
 
 app.use(cors({
-  // origin: process.env.CLIENT_URI,
-  origin: ["http://localhost:5173", "http://192.168.1.5:5173"],
+  origin: process.env.CLIENT_URI,
   credentials: true,
 }));
 
