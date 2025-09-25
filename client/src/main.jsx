@@ -1,6 +1,9 @@
 import "./index.css";
-import React from "react";
 import ReactDOM from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
+registerSW({
+  immediate: true,
+})
 import {
   RouterProvider,
   Navigate,
